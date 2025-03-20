@@ -42,9 +42,6 @@ class PassRecovery extends StatelessWidget {
             Form(
               key: _formKey,
               child: TextFormField(
-                onSaved: (emal) {
-                  // Email
-                },
                 validator: Validator.email,
                 controller: email,
                 textInputAction: TextInputAction.next,

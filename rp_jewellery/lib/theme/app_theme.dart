@@ -12,7 +12,7 @@ class AppTheme {
       fontFamily: "Plus Jakarta",
       primarySwatch: primaryMaterialColor,
       primaryColor: primaryColor,
-      scaffoldBackgroundColor: Colors.white,
+      scaffoldBackgroundColor: const Color.fromRGBO(253, 239, 233, 1),
       iconTheme: const IconThemeData(color: blackColor),
       textTheme: const TextTheme(
         bodyMedium: TextStyle(color: blackColor40),

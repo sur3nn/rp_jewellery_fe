@@ -33,7 +33,9 @@ class ProductCard extends StatelessWidget {
             aspectRatio: 1.15,
             child: Stack(
               children: [
-                NetworkImageWithLoader(image, radius: defaultBorderRadious),
+                // NetworkImageWithLoader(image, radius: defaultBorderRadious),
+                Image.asset('assets/icons/studs.jpg'),
+
                 if (dicountpercent != null)
                   Positioned(
                     right: defaultPadding / 2,
@@ -67,7 +69,7 @@ class ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    brandName.toUpperCase(),
+                    "Gold",
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!
@@ -75,7 +77,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: defaultPadding / 2),
                   Text(
-                    title,
+                    "Luxe Gold Drop Earrings",
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
@@ -88,7 +90,7 @@ class ProductCard extends StatelessWidget {
                       ? Row(
                           children: [
                             Text(
-                              "\$$priceAfetDiscount",
+                              "Rs.$priceAfetDiscount",
                               style: const TextStyle(
                                 color: Color(0xFF31B0D8),
                                 fontWeight: FontWeight.w500,
@@ -97,7 +99,7 @@ class ProductCard extends StatelessWidget {
                             ),
                             const SizedBox(width: defaultPadding / 4),
                             Text(
-                              "\$$price",
+                              "$price",
                               style: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme

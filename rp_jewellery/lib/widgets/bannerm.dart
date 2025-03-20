@@ -20,9 +20,20 @@ class BannerM extends StatelessWidget {
         onTap: press,
         child: Stack(
           children: [
-            NetworkImageWithLoader(image, radius: 0),
+            // NetworkImageWithLoader(image, radius: 0),
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                    'assets/icons/adv1.webp',
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+
             Container(color: Colors.black45),
-            ...children,
+            // ...children,
           ],
         ),
       ),

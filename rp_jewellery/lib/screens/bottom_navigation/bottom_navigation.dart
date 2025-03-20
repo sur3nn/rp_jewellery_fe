@@ -14,13 +14,7 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  final List _pages = const [
-    HomePage(),
-
-    // EmptyCartScreen(), // if Cart is empty
-    AddToCart(),
-    MyProfile(),
-  ];
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -37,6 +31,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     }
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         // pinned: true,
         // floating: true,
@@ -45,12 +40,15 @@ class _BottomNavigationState extends State<BottomNavigation> {
         leading: const SizedBox(),
         leadingWidth: 0,
         centerTitle: false,
-        title: SvgPicture.asset(
-          "assets/icons/Shoplon.svg",
-          colorFilter: ColorFilter.mode(
-              Theme.of(context).iconTheme.color!, BlendMode.srcIn),
-          height: 20,
-          width: 100,
+
+        title: GestureDetector(
+          onTap: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+          child: const Text(
+            "RP Jewellery",
+            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+          ),
         ),
         actions: [
           IconButton(
@@ -65,7 +63,39 @@ class _BottomNavigationState extends State<BottomNavigation> {
           ),
         ],
       ),
-      body: _pages[_currentIndex],
+      drawer: Drawer(
+        // backgroundColor: Color.fromRGBO(247, 243, 243, 1),
+        width: MediaQuery.of(context).size.width / 1.5,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 40,
+              ),
+              ...List.generate(
+                  5,
+                  (index) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [Text("Diamond"), Icon(Icons.add)],
+                        ),
+                      ))
+            ],
+          ),
+        ),
+      ),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: const [
+          HomePage(),
+
+          // EmptyCartScreen(), // if Cart is empty
+          AddToCart(),
+          MyProfile(),
+        ],
+      ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(top: defaultPadding / 2),
         color: Theme.of(context).brightness == Brightness.light

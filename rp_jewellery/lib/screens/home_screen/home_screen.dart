@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lottie/lottie.dart';
 import 'package:rp_jewellery/widgets/offer_carousel.dart';
 import 'package:rp_jewellery/widgets/popular_products.dart';
 
@@ -10,7 +9,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(252, 242, 243, 1),
+      backgroundColor: const Color.fromRGBO(253, 239, 233, 1),
       body: SafeArea(
         child: Column(
           children: [
@@ -33,7 +32,7 @@ class HomePage extends StatelessWidget {
                           const SizedBox(
                             width: 20,
                           ),
-                          Column(
+                          const Column(
                             children: [
                               Text("Gold Rate"),
                               Text(
@@ -64,7 +63,7 @@ class HomePage extends StatelessWidget {
                           const SizedBox(
                             width: 20,
                           ),
-                          Column(
+                          const Column(
                             children: [
                               Text("Silver Rate"),
                               Text(

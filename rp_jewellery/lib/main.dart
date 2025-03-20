@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme(context),
       // Dark theme is inclided in the Full template
       themeMode: ThemeMode.light,
-      home: BottomNavigation(),
+      home: Login(),
     );
   }
 }

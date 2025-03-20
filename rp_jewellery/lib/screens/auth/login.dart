@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rp_jewellery/screens/auth/pass_recovery.dart';
 import 'package:rp_jewellery/screens/auth/signup.dart';
+import 'package:rp_jewellery/screens/bottom_navigation/bottom_navigation.dart';
+import 'package:rp_jewellery/screens/home_screen/home_screen.dart';
 import 'package:rp_jewellery/validations/validator.dart';
 
 class Login extends StatelessWidget {
@@ -13,9 +16,14 @@ class Login extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset(
-              "assets/images/login_dark.png",
-              fit: BoxFit.cover,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Image.asset(
+                "assets/images/GoldSam.jpg",
+                fit: BoxFit.fill,
+                width: double.infinity,
+                height: 400,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(16),
@@ -36,21 +44,24 @@ class Login extends StatelessWidget {
                     child: TextButton(
                       child: const Text("Forgot password"),
                       onPressed: () {
-                        // Navigator.pushNamed(
-                        //     context, passwordRecoveryScreenRoute);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PassRecovery()));
                       },
                     ),
                   ),
                   SizedBox(
-                    height: size.height > 700 ? size.height * 0.1 : 16,
+                    height: 20,
                   ),
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // Navigator.pushNamedAndRemoveUntil(
-                        //     context,
-                        //     entryPointScreenRoute,
-                        //     ModalRoute.withName(logInScreenRoute));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const BottomNavigation()));
                       }
                     },
                     child: const Text("Log in"),
