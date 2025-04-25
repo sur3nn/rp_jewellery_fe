@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rp_jewellery/constants/constants.dart';
+import 'package:rp_jewellery/model/cart_model.dart';
+import 'package:rp_jewellery/screens/all_products/cart.dart';
 
-import 'package:rp_jewellery/screens/cart/add_to_cart.dart';
+import 'package:rp_jewellery/screens/all_products/product_list.dart';
 import 'package:rp_jewellery/screens/home_screen/home_screen.dart';
-import 'package:rp_jewellery/screens/profile/profile.dart';
+import 'package:rp_jewellery/screens/schemes/schemes.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
@@ -52,9 +54,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CartScreen(cartItems: cartItems)));
+            },
             icon: SvgPicture.asset(
-              "assets/icons/Notification.svg",
+              "assets/icons/Bag.svg",
               height: 24,
               colorFilter: ColorFilter.mode(
                   Theme.of(context).textTheme.bodyLarge!.color!,
@@ -66,22 +73,62 @@ class _BottomNavigationState extends State<BottomNavigation> {
       drawer: Drawer(
         // backgroundColor: Color.fromRGBO(247, 243, 243, 1),
         width: MediaQuery.of(context).size.width / 1.5,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(
-                height: 40,
+              Container(
+                height: 250,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(15)),
+                    color: primaryColor),
+                width: MediaQuery.of(context).size.width / 1.5,
+                child: CircleAvatar(
+                  radius: 80,
+                  backgroundColor: whiteColor,
+                  child: Center(
+                    child: Text(
+                      "MH",
+                      style: const TextTheme().headlineLarge,
+                    ),
+                  ),
+                ),
               ),
-              ...List.generate(
-                  5,
-                  (index) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text("Diamond"), Icon(Icons.add)],
-                        ),
-                      ))
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    ...List.generate(
+                        5,
+                        (index) => const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10.0),
+                              child: ExpansionTile(
+                                shape: Border.fromBorderSide(BorderSide.none),
+                                dense: true,
+                                title: Text("Diamond"),
+                                children: [
+                                  ListTile(
+                                    title: Text("data"),
+                                  ),
+                                  ListTile(
+                                    title: Text("data"),
+                                  ),
+                                  ListTile(
+                                    title: Text("data"),
+                                  ),
+                                  ListTile(
+                                    title: Text("data"),
+                                  ),
+                                ],
+                              ),
+                            ))
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -93,7 +140,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
           // EmptyCartScreen(), // if Cart is empty
           AddToCart(),
-          MyProfile(),
+          GoldSchemeScreen(),
         ],
       ),
       bottomNavigationBar: Container(
@@ -119,22 +166,32 @@ class _BottomNavigationState extends State<BottomNavigation> {
           selectedItemColor: primaryColor,
           unselectedItemColor: Colors.transparent,
           items: [
+            const BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.home_max_outlined,
+                  color: blackColor,
+                ),
+                activeIcon: Icon(Icons.home_max_outlined, color: primaryColor),
+                label: "Home"),
             BottomNavigationBarItem(
               icon: svgIcon("assets/icons/Shop.svg"),
               activeIcon: svgIcon("assets/icons/Shop.svg", color: primaryColor),
               label: "Shop",
             ),
-            BottomNavigationBarItem(
-              icon: svgIcon("assets/icons/Bag.svg"),
-              activeIcon: svgIcon("assets/icons/Bag.svg", color: primaryColor),
-              label: "Cart",
+            const BottomNavigationBarItem(
+              icon: Icon(
+                Icons.monetization_on_outlined,
+                color: blackColor,
+              ),
+              activeIcon: Icon(Icons.monetization_on, color: primaryColor),
+              label: "Schemes",
             ),
-            BottomNavigationBarItem(
-              icon: svgIcon("assets/icons/Profile.svg"),
-              activeIcon:
-                  svgIcon("assets/icons/Profile.svg", color: primaryColor),
-              label: "Profile",
-            ),
+            // BottomNavigationBarItem(
+            //   icon: svgIcon("assets/icons/Profile.svg"),
+            //   activeIcon:
+            //       svgIcon("assets/icons/Profile.svg", color: primaryColor),
+            //   label: "Profile",
+            // ),
           ],
         ),
       ),
