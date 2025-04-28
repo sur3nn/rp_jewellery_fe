@@ -1,12 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:rp_jewellery/screens/auth/change_pass.dart';
-import 'package:rp_jewellery/screens/auth/login.dart';
-import 'package:rp_jewellery/screens/auth/pass_recovery.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rp_jewellery/business_logic/login_bloc/login_bloc.dart';
+import 'package:rp_jewellery/firebase_options.dart';
+import 'package:rp_jewellery/repository/repository.dart';
 import 'package:rp_jewellery/screens/bottom_navigation/bottom_navigation.dart';
-import 'package:rp_jewellery/screens/home_screen/home_screen.dart';
 import 'package:rp_jewellery/theme/app_theme.dart';
 
-void main() {
+void main() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -15,13 +17,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme(context),
-      // Dark theme is inclided in the Full template
-      themeMode: ThemeMode.light,
-      home: BottomNavigation(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<LoginBloc>(create: (context) => LoginBloc(Repository())),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme(context),
+        themeMode: ThemeMode.light,
+        home: const BottomNavigation(),
+      ),
     );
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "762773404557",
+    "project_id": "rpjewellery-a9278",
+    "storage_bucket": "rpjewellery-a9278.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762773404557:android:249172efb6276d1b075bc4",
+        "android_client_info": {
+          "package_name": "com.example.rp_jewellery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHBx6XsdQ02zKS0WivqI3hYLmqTbpybps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
