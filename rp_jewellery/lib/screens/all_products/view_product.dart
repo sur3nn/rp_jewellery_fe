@@ -127,7 +127,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                      "sdhaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasjnbakjbkjjjjjjjjjjjjjjjjjjjjjaddddddddddddddgggggggggggggg"),
+                      "Add a touch of timeless elegance to your collection with this exquisitely crafted 22K gold necklace set. Designed to reflect sophistication and tradition, this piece features intricate detailing and a radiant finish that captures light beautifully. Perfect for weddings, festive occasions, or as a cherished gift, the set includes a matching pair of earrings to complete"),
                 ),
               ),
               const SizedBox(height: 20),
