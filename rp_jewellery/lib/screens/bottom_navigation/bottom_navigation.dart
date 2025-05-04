@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rp_jewellery/business_logic/product_category_bloc/product_category_bloc.dart';
 import 'package:rp_jewellery/constants/constants.dart';
+import 'package:rp_jewellery/main.dart';
 import 'package:rp_jewellery/model/cart_model.dart';
 import 'package:rp_jewellery/screens/all_products/cart.dart';
 
@@ -16,6 +19,12 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProductCategoryBloc>().add(GetCategories());
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _currentIndex = 0;
   @override
@@ -71,28 +80,35 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ],
       ),
       drawer: Drawer(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         // backgroundColor: Color.fromRGBO(247, 243, 243, 1),
         width: MediaQuery.of(context).size.width / 1.5,
         child: SingleChildScrollView(
           child: Column(
             children: [
               Container(
-                height: 250,
-                alignment: Alignment.center,
+                height: 100,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                alignment: Alignment.centerLeft,
                 decoration: const BoxDecoration(
                     borderRadius:
                         BorderRadius.vertical(top: Radius.circular(15)),
-                    color: primaryColor),
+                    color: Color.fromARGB(100, 232, 9, 9)),
                 width: MediaQuery.of(context).size.width / 1.5,
-                child: CircleAvatar(
-                  radius: 80,
-                  backgroundColor: whiteColor,
-                  child: Center(
-                    child: Text(
-                      "MH",
-                      style: const TextTheme().headlineLarge,
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: whiteColor,
+                      child: Text(
+                        "MH",
+                        style: const TextTheme().headlineLarge,
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 20),
+                    const Text("Michael",
+                        style: TextStyle(color: whiteColor, fontSize: 18)),
+                  ],
                 ),
               ),
               Padding(
@@ -102,30 +118,41 @@ class _BottomNavigationState extends State<BottomNavigation> {
                     const SizedBox(
                       height: 40,
                     ),
-                    ...List.generate(
-                        5,
-                        (index) => const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10.0),
-                              child: ExpansionTile(
-                                shape: Border.fromBorderSide(BorderSide.none),
-                                dense: true,
-                                title: Text("Diamond"),
-                                children: [
-                                  ListTile(
-                                    title: Text("data"),
-                                  ),
-                                  ListTile(
-                                    title: Text("data"),
-                                  ),
-                                  ListTile(
-                                    title: Text("data"),
-                                  ),
-                                  ListTile(
-                                    title: Text("data"),
-                                  ),
-                                ],
-                              ),
-                            ))
+                    BlocBuilder<ProductCategoryBloc, ProductCategoryState>(
+                      builder: (context, state) {
+                        if (state is ProductCategorySuccess) {
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: state.data.data?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                final data = state.data.data?[index];
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  child: ExpansionTile(
+                                      shape: const Border.fromBorderSide(
+                                          BorderSide.none),
+                                      dense: true,
+                                      title: Text(
+                                        data?.materialName ?? "",
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                      children: List.generate(
+                                          data?.productDetails?.length ?? 0,
+                                          (index) => ListTile(
+                                                title: Text(data
+                                                        ?.productDetails?[index]
+                                                        .productName ??
+                                                    ""),
+                                              ))),
+                                );
+                              });
+                        }
+                        return const SizedBox();
+                      },
+                    )
                   ],
                 ),
               ),
