@@ -1,24 +1,25 @@
 import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rp_jewellery/model/error_model.dart';
 import 'package:rp_jewellery/model/login_model.dart';
 import 'package:rp_jewellery/repository/repository.dart';
 
-part 'login_event.dart';
-part 'login_state.dart';
+part 'forgot_pass_event.dart';
+part 'forgot_pass_state.dart';
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
+class ForgotPassBloc extends Bloc<ForgotPassEvent, ForgotPassState> {
   final Repository repo;
-  LoginBloc(this.repo) : super(LoginInitial()) {
-    on<StartLogin>((event, emit) async {
+  ForgotPassBloc(this.repo) : super(ForgotPassInitial()) {
+    on<SendMailEvent>((event, emit) async {
       try {
-        emit(LoginLoading());
-        final LoginModel data = await repo.login(event.email, event.pass);
-        emit(LoginSucess(data: data));
+        emit(ForgotPassLoading());
+        final LoginModel data = await repo.forgotPass(event.email);
+        emit(ForgotPassSucess(data: data));
       } on DioException catch (e) {
         final ErrorModel error = ErrorModel.fromJson(e.response?.data);
-        emit(LoginFailure(error: error));
+        emit(ForgotPassFailure(data: error));
       }
     });
   }

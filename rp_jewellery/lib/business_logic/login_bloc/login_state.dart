@@ -13,4 +13,8 @@ final class LoginSucess extends LoginState {
   LoginSucess({required this.data});
 }
 
-final class LoginFailure extends LoginState {}
+final class LoginFailure extends LoginState {
+  final ErrorModel error;
+
+  LoginFailure({required this.error});
+}
