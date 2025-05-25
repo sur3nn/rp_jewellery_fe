@@ -132,3 +132,57 @@ class SchemeDetailsTab extends StatelessWidget {
     );
   }
 }
+
+class SchemeDetails extends StatelessWidget {
+  const SchemeDetails({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Gold Saving Scheme")),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("schemeName",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text("Monthly Amount: ₹amount",
+                style: TextStyle(fontSize: 16, color: Colors.grey[700])),
+            const SizedBox(height: 20),
+            // Expanded(
+            //   child: ListView.separated(
+            //     itemCount:12,
+            //     separatorBuilder: (_, __) => Divider(),
+            //     itemBuilder: (context, index) {
+            //       final item = paymentDetails[index];
+            //       final monthName = monthNames[item.monthId] ?? 'Unknown';
+            //       final isCurrent = item.isAvailable == 1;
+            //       final isPaid = item.isPaid == 1;
+
+            //       return ListTile(
+            //         title: Text("$monthName ${item.yearId}"),
+            //         trailing: isPaid
+            //             ? const Text("Paid",
+            //                 style: TextStyle(
+            //                     color: Colors.green,
+            //                     fontWeight: FontWeight.bold))
+            //             : ElevatedButton(
+            //                 onPressed: isCurrent ? () {
+            //                   // 👉 Handle pay action here
+            //                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //                     content: Text('Proceed to pay for $monthName'),
+            //                   ));
+            //                 } : null,
+            //                 child: const Text("Pay"),
+            //               ),
+            //       );
+            //     },
+            //   ),
+            // ),
+          ],
+        ),
+      ),
+    );
+  }
+}

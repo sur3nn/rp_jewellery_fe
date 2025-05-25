@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rp_jewellery/business_logic/gold_price_bloc/gold_price_bloc.dart';
+import 'package:rp_jewellery/business_logic/silver_price_bloc/silver_price_bloc.dart';
 import 'package:rp_jewellery/widgets/offer_carousel.dart';
 import 'package:rp_jewellery/widgets/popular_products.dart';
 
@@ -8,6 +11,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SilverPriceBloc>().add(GetSilverPriceEvent());
+      context.read<GoldPriceBloc>().add(GetGoldPriceEvent());
+    });
     return Scaffold(
       backgroundColor: const Color.fromRGBO(253, 239, 233, 1),
       body: SafeArea(
@@ -32,14 +39,22 @@ class HomePage extends StatelessWidget {
                           const SizedBox(
                             width: 20,
                           ),
-                          const Column(
+                          Column(
                             children: [
-                              Text("Gold Rate"),
-                              Text(
-                                "₹ 8,020",
-                                style: TextStyle(color: Colors.green),
+                              const Text("Gold Rate"),
+                              BlocBuilder<GoldPriceBloc, GoldPriceState>(
+                                builder: (context, state) {
+                                  if (state is GoldPriceSuccess) {
+                                    return Text(
+                                      state.price,
+                                      style:
+                                          const TextStyle(color: Colors.green),
+                                    );
+                                  }
+                                  return const SizedBox();
+                                },
                               ),
-                              Text("22KT Per gram",
+                              const Text("22KT Per gram",
                                   style: TextStyle(
                                     fontSize: 10,
                                   )),
@@ -63,12 +78,19 @@ class HomePage extends StatelessWidget {
                           const SizedBox(
                             width: 20,
                           ),
-                          const Column(
+                          Column(
                             children: [
                               Text("Silver Rate"),
-                              Text(
-                                "₹ 8,020",
-                                style: TextStyle(color: Colors.green),
+                              BlocBuilder<SilverPriceBloc, SilverPriceState>(
+                                builder: (context, state) {
+                                  if (state is SilverPriceSucess) {
+                                    return Text(
+                                      state.price,
+                                      style: TextStyle(color: Colors.green),
+                                    );
+                                  }
+                                  return SizedBox();
+                                },
                               ),
                               Text("Per gram",
                                   style: TextStyle(

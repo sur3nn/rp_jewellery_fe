@@ -7,7 +7,7 @@ import 'package:rp_jewellery/services/firebase_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Repository {
-  final Dio dio = Dio(BaseOptions(baseUrl: "http://172.20.10.3:9000/api"));
+  final Dio dio = Dio(BaseOptions(baseUrl: "http://192.168.252.117:9000/api"));
 
   Future<SignupModel> signup(String name, String email, String pass) async {
     final Response res = await dio.post('/user/sign-up',
@@ -62,5 +62,41 @@ class Repository {
   Future<ProductCategoryModel> getCategories() async {
     final Response res = await dio.get("/home/product-list");
     return ProductCategoryModel.fromJson(res.data);
+  }
+
+  Future<String> addScheme(String name, String amt) async {
+    final Response res = await dio
+        .post("/scheme/add-schem", data: {"schemeName": name, "amount": amt});
+    return res.data["message"];
+  }
+
+  Future<String> getGoldPrice() async {
+    final Response res = await dio.get("/home/gold-price");
+    return res.data["price"].toString();
+  }
+
+  Future<String> getSilverPrice() async {
+    final Response res = await dio.get("/home/silver-price");
+    return res.data["price"].toString();
+  }
+
+  Future<String> addProduct(
+      {required int product,
+      required int material,
+      required String desc,
+      required String size,
+      required int stock,
+      required String purity,
+      required String price}) async {
+    final Response res = await dio.post("/home/add-product", data: {
+      "product": product,
+      "material": material,
+      "descrption": desc,
+      "stock": stock,
+      "size": size,
+      "purity": purity,
+      "grandTotal": price
+    });
+    return res.data["message"];
   }
 }

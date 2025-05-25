@@ -5,6 +5,9 @@ import 'package:rp_jewellery/business_logic/product_category_bloc/product_catego
 import 'package:rp_jewellery/constants/constants.dart';
 import 'package:rp_jewellery/main.dart';
 import 'package:rp_jewellery/model/cart_model.dart';
+import 'package:rp_jewellery/screens/admin/add_announcement.dart';
+import 'package:rp_jewellery/screens/admin/add_product.dart';
+import 'package:rp_jewellery/screens/admin/add_schemes.dart';
 import 'package:rp_jewellery/screens/all_products/cart.dart';
 
 import 'package:rp_jewellery/screens/all_products/product_list.dart';
@@ -12,7 +15,8 @@ import 'package:rp_jewellery/screens/home_screen/home_screen.dart';
 import 'package:rp_jewellery/screens/schemes/schemes.dart';
 
 class BottomNavigation extends StatefulWidget {
-  const BottomNavigation({super.key});
+  final bool isAdmin;
+  const BottomNavigation({super.key, required this.isAdmin});
 
   @override
   State<BottomNavigation> createState() => _BottomNavigationState();
@@ -43,42 +47,45 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        // pinned: true,
-        // floating: true,
-        // snap: true,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        leading: const SizedBox(),
-        leadingWidth: 0,
-        centerTitle: false,
+      appBar: widget.isAdmin
+          ? null
+          : AppBar(
+              // pinned: true,
+              // floating: true,
+              // snap: true,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              leading: const SizedBox(),
+              leadingWidth: 0,
+              centerTitle: false,
 
-        title: GestureDetector(
-          onTap: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
-          child: const Text(
-            "RP Jewellery",
-            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CartScreen(cartItems: cartItems)));
-            },
-            icon: SvgPicture.asset(
-              "assets/icons/Bag.svg",
-              height: 24,
-              colorFilter: ColorFilter.mode(
-                  Theme.of(context).textTheme.bodyLarge!.color!,
-                  BlendMode.srcIn),
+              title: GestureDetector(
+                onTap: () {
+                  _scaffoldKey.currentState?.openDrawer();
+                },
+                child: const Text(
+                  "RP Jewellery",
+                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+                ),
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                CartScreen(cartItems: cartItems)));
+                  },
+                  icon: SvgPicture.asset(
+                    "assets/icons/Bag.svg",
+                    height: 24,
+                    colorFilter: ColorFilter.mode(
+                        Theme.of(context).textTheme.bodyLarge!.color!,
+                        BlendMode.srcIn),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       drawer: Drawer(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         // backgroundColor: Color.fromRGBO(247, 243, 243, 1),
@@ -162,13 +169,19 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ),
       body: IndexedStack(
         index: _currentIndex,
-        children: const [
-          HomePage(),
+        children: widget.isAdmin
+            ? [
+                const AdminAddAnnouncementScreen(),
+                const AdminAddProductScreen(),
+                const AdminAddGoldSchemeScreen()
+              ]
+            : const [
+                HomePage(),
 
-          // EmptyCartScreen(), // if Cart is empty
-          AddToCart(),
-          GoldSchemeScreen(),
-        ],
+                // EmptyCartScreen(), // if Cart is empty
+                AddToCart(),
+                GoldSchemeScreen(),
+              ],
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(top: defaultPadding / 2),
