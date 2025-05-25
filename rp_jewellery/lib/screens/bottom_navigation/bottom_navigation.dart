@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rp_jewellery/business_logic/all_products_bloc/all_products_bloc.dart';
 import 'package:rp_jewellery/business_logic/product_category_bloc/product_category_bloc.dart';
 import 'package:rp_jewellery/constants/constants.dart';
 import 'package:rp_jewellery/main.dart';
@@ -27,6 +28,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   void initState() {
     super.initState();
     context.read<ProductCategoryBloc>().add(GetCategories());
+    context.read<AllProductsBloc>().add(StartGetProducts(id: 0));
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();

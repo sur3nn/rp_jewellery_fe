@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:rp_jewellery/model/all_product_model.dart';
 import 'package:rp_jewellery/model/login_model.dart';
 import 'package:rp_jewellery/model/product_category_model.dart';
 import 'package:rp_jewellery/model/signup_model.dart';
@@ -8,6 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Repository {
   final Dio dio = Dio(BaseOptions(baseUrl: "http://192.168.252.117:9000/api"));
+
+  Future<int> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('userId') ?? 1;
+  }
 
   Future<SignupModel> signup(String name, String email, String pass) async {
     final Response res = await dio.post('/user/sign-up',
@@ -96,6 +102,24 @@ class Repository {
       "size": size,
       "purity": purity,
       "grandTotal": price
+    });
+    return res.data["message"];
+  }
+
+  Future<ProductDetailsModel> getAllProducts(int id) async {
+    final Response res = await dio
+        .get("/home/product-details", queryParameters: {"productId": id});
+    return ProductDetailsModel.fromJson(res.data);
+  }
+
+  Future<String> addToCart(
+    int productId,
+    int quantity,
+  ) async {
+    final Response res = await dio.post("/cart/add-cart", data: {
+      "productMaterialId": productId,
+      "quantity": quantity,
+      "userId": await getUserId()
     });
     return res.data["message"];
   }

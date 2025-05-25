@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rp_jewellery/business_logic/all_products_bloc/all_products_bloc.dart';
 import 'package:rp_jewellery/business_logic/change_pass_bloc/change_pass_bloc.dart';
 import 'package:rp_jewellery/business_logic/forgot_pass_bloc/forgot_pass_bloc.dart';
 import 'package:rp_jewellery/business_logic/gold_price_bloc/gold_price_bloc.dart';
@@ -52,6 +53,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<GoldPriceBloc>(create: (context) => GoldPriceBloc(repo)),
         BlocProvider<SilverPriceBloc>(
             create: (context) => SilverPriceBloc(repo)),
+        BlocProvider<AllProductsBloc>(
+            create: (context) => AllProductsBloc(repo)),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:rp_jewellery/constants/constants.dart';
 import 'package:rp_jewellery/widgets/network_loader.dart';
 
@@ -30,7 +31,7 @@ class ProductCard extends StatelessWidget {
       child: Column(
         children: [
           AspectRatio(
-            aspectRatio: 1.15,
+            aspectRatio: 1.05,
             child: Stack(
               children: [
                 // NetworkImageWithLoader(image, radius: defaultBorderRadious),
@@ -69,7 +70,7 @@ class ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Gold",
+                    brandName,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!
@@ -77,7 +78,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: defaultPadding / 2),
                   Text(
-                    "Luxe Gold Drop Earrings",
+                    title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
@@ -85,40 +86,42 @@ class ProductCard extends StatelessWidget {
                         .titleSmall!
                         .copyWith(fontSize: 12),
                   ),
-                  const Spacer(),
-                  priceAfetDiscount != null
-                      ? Row(
-                          children: [
-                            Text(
-                              "Rs.$priceAfetDiscount",
-                              style: const TextStyle(
-                                color: Color(0xFF31B0D8),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                              ),
-                            ),
-                            const SizedBox(width: defaultPadding / 4),
-                            Text(
-                              "$price",
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .color,
-                                fontSize: 10,
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            ),
-                          ],
-                        )
-                      : Text(
-                          "\$$price",
-                          style: const TextStyle(
-                            color: Color(0xFF31B0D8),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                          ),
-                        ),
+
+                  // priceAfetDiscount != null
+                  //     ? Row(
+                  //         children: [
+                  //           Text(
+                  //             "Rs.$priceAfetDiscount",
+                  //             style: const TextStyle(
+                  //               color: Color(0xFF31B0D8),
+                  //               fontWeight: FontWeight.w500,
+                  //               fontSize: 12,
+                  //             ),
+                  //           ),
+                  //           const SizedBox(width: defaultPadding / 4),
+                  //           Text(
+                  //             "$price",
+                  //             style: TextStyle(
+                  //               color: Theme.of(context)
+                  //                   .textTheme
+                  //                   .bodyMedium!
+                  //                   .color,
+                  //               fontSize: 10,
+                  //               decoration: TextDecoration.lineThrough,
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       )
+                  //     :
+                  //
+                  Text(
+                    "\$$price",
+                    style: const TextStyle(
+                      color: Color(0xFF31B0D8),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
               ),
             ),
