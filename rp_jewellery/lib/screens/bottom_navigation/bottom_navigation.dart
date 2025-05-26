@@ -14,6 +14,7 @@ import 'package:rp_jewellery/screens/all_products/cart.dart';
 import 'package:rp_jewellery/screens/all_products/product_list.dart';
 import 'package:rp_jewellery/screens/home_screen/home_screen.dart';
 import 'package:rp_jewellery/screens/schemes/schemes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomNavigation extends StatefulWidget {
   final bool isAdmin;
@@ -72,11 +73,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                CartScreen(cartItems: cartItems)));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => CartScreen()));
                   },
                   icon: SvgPicture.asset(
                     "assets/icons/Bag.svg",
@@ -106,17 +104,26 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 width: MediaQuery.of(context).size.width / 1.5,
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundColor: whiteColor,
-                      child: Text(
-                        "MH",
-                        style: const TextTheme().headlineLarge,
-                      ),
-                    ),
+                    FutureBuilder<String>(
+                        future: getInitial(),
+                        builder: (context, snap) {
+                          return CircleAvatar(
+                            radius: 20,
+                            backgroundColor: whiteColor,
+                            child: Text(
+                              snap.data ?? " - ",
+                              style: const TextTheme().headlineLarge,
+                            ),
+                          );
+                        }),
                     const SizedBox(width: 20),
-                    const Text("Michael",
-                        style: TextStyle(color: whiteColor, fontSize: 18)),
+                    FutureBuilder<String>(
+                        future: getName(),
+                        builder: (context, snap) {
+                          return Text(snap.data ?? " - ",
+                              style:
+                                  TextStyle(color: whiteColor, fontSize: 18));
+                        }),
                   ],
                 ),
               ),
@@ -151,6 +158,18 @@ class _BottomNavigationState extends State<BottomNavigation> {
                                       children: List.generate(
                                           data?.productDetails?.length ?? 0,
                                           (index) => ListTile(
+                                                onTap: () {
+                                                  context
+                                                      .read<AllProductsBloc>()
+                                                      .add(StartGetProducts(
+                                                          id: data!
+                                                              .productDetails![
+                                                                  index]
+                                                              .productMaterialId!));
+                                                  setState(() {
+                                                    _currentIndex = 1;
+                                                  });
+                                                },
                                                 title: Text(data
                                                         ?.productDetails?[index]
                                                         .productName ??
@@ -238,5 +257,15 @@ class _BottomNavigationState extends State<BottomNavigation> {
         ),
       ),
     );
+  }
+
+  Future<String> getInitial() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('profile') ?? "";
+  }
+
+  Future<String> getName() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('name') ?? "";
   }
 }

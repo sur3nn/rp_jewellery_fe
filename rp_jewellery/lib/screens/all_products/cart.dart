@@ -1,70 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_upi_india/flutter_upi_india.dart';
+import 'package:rp_jewellery/business_logic/cart_list_bloc/cart_list_bloc.dart';
+import 'package:rp_jewellery/model/cart_list_model.dart';
 import 'package:rp_jewellery/model/cart_model.dart';
 
 class CartScreen extends StatelessWidget {
-  final List<CartItem> cartItems;
+  const CartScreen({
+    Key? key,
+  }) : super(key: key);
 
-  const CartScreen({Key? key, required this.cartItems}) : super(key: key);
-
-  double _calculateSubtotal() {
-    return cartItems.fold(0, (sum, item) => sum + item.price * item.quantity);
+  double _calculateSubtotal(List<CartData> data) {
+    return data.fold(
+        0, (sum, item) => sum + int.parse(item.totalPrice!) * item.quantity!);
   }
 
   @override
   Widget build(BuildContext context) {
-    double discount = 200;
-    double subtotal = _calculateSubtotal();
-    double gst = (subtotal - discount) * 0.18;
-    double total = subtotal - discount + gst;
-
+    context.read<CartListBloc>().add(StartCartList());
     return Scaffold(
       appBar: AppBar(title: const Text("Your Cart")),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(16),
-              itemCount: cartItems.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final item = cartItems[index];
-                return ListTile(
-                  leading: Image.asset(item.imagePath, width: 50),
-                  title: Text(item.name),
-                  subtitle: Text("Qty: ${item.quantity}"),
-                  trailing: Text(
-                      "₹${(item.price * item.quantity).toStringAsFixed(2)}"),
-                );
+            BlocBuilder<CartListBloc, CartListState>(
+              builder: (context, state) {
+                if (state is CartListLoading) {
+                  return CircularProgressIndicator();
+                } else if (state is CartListSuccess) {
+                  double discount = 200;
+                  double subtotal = _calculateSubtotal(state.data.data!);
+                  double gst = (subtotal - discount) * 0.18;
+                  double total = subtotal - discount + gst;
+                  return Column(
+                    children: [
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(16),
+                        itemCount: state.data.data?.length ?? 0,
+                        separatorBuilder: (_, __) => const SizedBox(height: 10),
+                        itemBuilder: (context, index) {
+                          final item = state.data.data![index];
+                          return ListTile(
+                            leading: Image.asset('assets/icons/studs.jpg',
+                                width: 50),
+                            title: Text(item.descrption ?? ""),
+                            subtitle: Text("Qty: ${item.quantity}"),
+                            trailing: Text(
+                                "₹${(int.parse(item.totalPrice!) * item.quantity!).toStringAsFixed(2)}"),
+                          );
+                        },
+                      ),
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          children: [
+                            _buildSummaryRow("Subtotal",
+                                "₹${_calculateSubtotal(state.data.data!).toStringAsFixed(2)}"),
+                            _buildSummaryRow("Discount",
+                                "- ₹${discount.toStringAsFixed(2)}"),
+                            _buildSummaryRow(
+                                "GST (18%)", "+ ₹${gst.toStringAsFixed(2)}"),
+                            const Divider(),
+                            _buildSummaryRow(
+                                "Total", "₹${total.toStringAsFixed(2)}",
+                                bold: true),
+                            const SizedBox(height: 16),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  _showUpiApps(context);
+                                },
+                                child: const Text("Proceed to Checkout"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return SizedBox();
               },
-            ),
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  _buildSummaryRow(
-                      "Subtotal", "₹${subtotal.toStringAsFixed(2)}"),
-                  _buildSummaryRow(
-                      "Discount", "- ₹${discount.toStringAsFixed(2)}"),
-                  _buildSummaryRow("GST (18%)", "+ ₹${gst.toStringAsFixed(2)}"),
-                  const Divider(),
-                  _buildSummaryRow("Total", "₹${total.toStringAsFixed(2)}",
-                      bold: true),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _showUpiApps(context);
-                      },
-                      child: const Text("Proceed to Checkout"),
-                    ),
-                  ),
-                ],
-              ),
             ),
           ],
         ),

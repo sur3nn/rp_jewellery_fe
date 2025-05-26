@@ -41,21 +41,21 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
     materials = data.map((e) => MaterialMeta.fromJson(e)).toList();
   }
 
-  List<File> productImages = [];
+  File? productImages;
 
   Future<void> pickImages() async {
     final picker = ImagePicker();
-    final pickedFiles = await picker.pickMultiImage();
-    if (pickedFiles.isNotEmpty) {
+    final pickedFiles = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFiles != null) {
       setState(() {
-        productImages = pickedFiles.map((e) => File(e.path)).toList();
+        productImages = File(pickedFiles.path);
       });
     }
   }
 
   void submitProduct() {
     if (_formKey.currentState!.validate() &&
-        productImages.isNotEmpty &&
+        productImages != null &&
         selectedMaterialId != null &&
         selectedProductMaterialId != null) {
       // Send data to backend API
@@ -66,7 +66,7 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
       print("Weight: ${weightController.text}");
       print("Purity: ${purityController.text}");
       print("Stock: ${stockController.text}");
-      print("Images: ${productImages.length}");
+      print("Images: ${productImages?.path}");
       Repository().addProduct(
           product: selectedProductMaterialId!,
           material: selectedMaterialId!,
@@ -74,7 +74,8 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
           size: weightController.text,
           price: priceController.text,
           purity: purityController.text,
-          stock: stockController.text.isEmpty ? 0 : 1);
+          stock: stockController.text.isEmpty ? 0 : 1,
+          image: productImages!);
       // Add your API call here
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Product Added Successfully")));
@@ -103,17 +104,12 @@ class _AdminAddProductScreenState extends State<AdminAddProductScreen> {
                     border: Border.all(),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: productImages.isEmpty
+                  child: productImages == null
                       ? Center(child: Text("Tap to add images"))
-                      : ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: productImages.map((img) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child:
-                                  Image.file(img, width: 80, fit: BoxFit.cover),
-                            );
-                          }).toList(),
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.file(productImages!,
+                              width: 80, fit: BoxFit.cover),
                         ),
                 ),
               ),

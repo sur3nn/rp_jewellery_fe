@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:rp_jewellery/constants/constants.dart';
@@ -14,7 +16,7 @@ class ProductCard extends StatelessWidget {
     this.dicountpercent,
     required this.press,
   });
-  final String image, brandName, title;
+  final String? image, brandName, title;
   final double price;
   final double? priceAfetDiscount;
   final int? dicountpercent;
@@ -35,7 +37,10 @@ class ProductCard extends StatelessWidget {
             child: Stack(
               children: [
                 // NetworkImageWithLoader(image, radius: defaultBorderRadious),
-                Image.asset('assets/icons/studs.jpg'),
+                image != null
+                    ? Image.memory(base64Decode(
+                        image!.replaceAll('\n', '').replaceAll('\r', '')))
+                    : Image.asset('assets/icons/studs.jpg'),
 
                 if (dicountpercent != null)
                   Positioned(
@@ -70,7 +75,7 @@ class ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    brandName,
+                    brandName!,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium!
@@ -78,7 +83,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: defaultPadding / 2),
                   Text(
-                    title,
+                    title!,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)

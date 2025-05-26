@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rp_jewellery/business_logic/all_products_bloc/all_products_bloc.dart';
 import 'package:rp_jewellery/constants/constants.dart';
 import 'package:rp_jewellery/model/product_model.dart';
+import 'package:rp_jewellery/screens/all_products/view_product.dart';
 import 'package:rp_jewellery/widgets/product_card.dart';
 
 class PopularProducts extends StatelessWidget {
@@ -54,14 +55,21 @@ class PopularProducts extends StatelessWidget {
                       right: index == data!.length - 1 ? defaultPadding : 0,
                     ),
                     child: ProductCard(
-                      image: productDemoImg1,
+                      image: data[index].image,
                       brandName: data[index].name ?? "",
                       title: data[index].metal ?? "",
                       price: double.parse(data[index].grandTotal ?? "0"),
                       priceAfetDiscount:
                           double.parse(data[index].grandTotal ?? "0"),
                       dicountpercent: 20,
-                      press: () {},
+                      press: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProductViewScreen(
+                                      data: data[index],
+                                    )));
+                      },
                     ),
                   ),
                 ),

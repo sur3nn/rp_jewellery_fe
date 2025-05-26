@@ -33,6 +33,7 @@ class AllProductData {
   int? gstPercentage;
   String? grandTotal;
   String? productAmount;
+  String? image;
   int? productDetailsId;
   int? productMaterialId;
 
@@ -49,6 +50,7 @@ class AllProductData {
       this.grandTotal,
       this.productAmount,
       this.productDetailsId,
+      this.image,
       this.productMaterialId});
 
   AllProductData.fromJson(Map<String, dynamic> json) {
@@ -65,6 +67,7 @@ class AllProductData {
     productAmount = json['product_amount'];
     productDetailsId = json['product_details_id'];
     productMaterialId = json['productMaterialId'];
+    image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
@@ -82,6 +85,7 @@ class AllProductData {
     data['product_amount'] = this.productAmount;
     data['product_details_id'] = this.productDetailsId;
     data['productMaterialId'] = this.productMaterialId;
+    data['image'] = this.image;
     return data;
   }
 }

@@ -27,8 +27,9 @@ class EnterOTP extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const BottomNavigation(
-                            isAdmin: true,
+                      builder: (context) => BottomNavigation(
+                            // isAdmin: state.data.name == "admin",
+                            isAdmin: false,
                           )));
             } else if (state is UserOtpVerifyFailure) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(

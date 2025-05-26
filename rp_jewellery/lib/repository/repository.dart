@@ -1,14 +1,20 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:rp_jewellery/model/all_product_model.dart';
+import 'package:rp_jewellery/model/cart_list_model.dart';
 import 'package:rp_jewellery/model/login_model.dart';
 import 'package:rp_jewellery/model/product_category_model.dart';
+import 'package:rp_jewellery/model/scheme_list_model.dart';
 import 'package:rp_jewellery/model/signup_model.dart';
+import 'package:rp_jewellery/model/user_scheme_model.dart';
 import 'package:rp_jewellery/model/verify_otp_model.dart';
 import 'package:rp_jewellery/services/firebase_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Repository {
-  final Dio dio = Dio(BaseOptions(baseUrl: "http://192.168.252.117:9000/api"));
+  final Dio dio = Dio(BaseOptions(baseUrl: "http://10.10.13.69:9000/api"));
 
   Future<int> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
@@ -30,6 +36,8 @@ class Repository {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('userId', data.userId!);
+    await prefs.setString('profile', data.profile!);
+    await prefs.setString('name', data.name!);
     return data;
   }
 
@@ -93,16 +101,36 @@ class Repository {
       required String size,
       required int stock,
       required String purity,
-      required String price}) async {
-    final Response res = await dio.post("/home/add-product", data: {
-      "product": product,
-      "material": material,
-      "descrption": desc,
-      "stock": stock,
-      "size": size,
-      "purity": purity,
-      "grandTotal": price
+      required String price,
+      required File image}) async {
+    final fileName = image.path.split('/').last;
+
+    // Build form data
+    final formData = FormData.fromMap({
+      "image": await MultipartFile.fromFile(
+        image.path,
+        filename: fileName,
+      ),
+      "reqBodys": jsonEncode({
+        "product": product,
+        "material": material,
+        "descrption": desc,
+        "stock": stock,
+        "size": size,
+        "purity": purity,
+        "grandTotal": price
+      })
     });
+    final Response res = await dio.post(
+      "/home/add-product",
+      data: formData,
+      options: Options(
+        headers: {
+          "Content-Type": "multipart/form-data",
+          // Add any auth headers if needed
+        },
+      ),
+    );
     return res.data["message"];
   }
 
@@ -122,5 +150,32 @@ class Repository {
       "userId": await getUserId()
     });
     return res.data["message"];
+  }
+
+  Future<CartListModel> cartList() async {
+    final Response res = await dio
+        .get("/cart/view-cart", queryParameters: {"userId": await getUserId()});
+    return CartListModel.fromJson(res.data);
+  }
+
+  Future<SchemeListModel> getSchemes() async {
+    final Response res = await dio.get("/scheme");
+    return SchemeListModel.fromJson(res.data);
+  }
+
+  Future<UserSchemeModel> getUserSchemes() async {
+    final Response res = await dio
+        .get("/scheme/user", queryParameters: {"userId": await getUserId()});
+    return UserSchemeModel.fromJson(res.data);
+  }
+
+  Future<UserSchemeModel> selectScheme(int id) async {
+    final Response res = await dio.post("/scheme/scheme-user", data: {
+      "userId": await getUserId(),
+      "yearId": DateTime.now().year,
+      "monthId": DateTime.now().month,
+      "schemeId": id
+    });
+    return UserSchemeModel.fromJson(res.data);
   }
 }

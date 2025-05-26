@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rp_jewellery/business_logic/all_products_bloc/all_products_bloc.dart';
@@ -21,9 +23,26 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
     'assets/icons/studs.jpg',
   ];
 
+  List memoryImage = [];
+
   final PageController _pageController = PageController();
   int _currentIndex = 0;
   int _quantity = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    memoryImage = widget.data.image != null
+        ? [
+            base64Decode(
+                widget.data.image!.replaceAll('\n', '').replaceAll('\r', '')),
+            base64Decode(
+                widget.data.image!.replaceAll('\n', '').replaceAll('\r', '')),
+            base64Decode(
+                widget.data.image!.replaceAll('\n', '').replaceAll('\r', '')),
+          ]
+        : _images;
+  }
 
   void _incrementQuantity() {
     setState(() {
@@ -63,7 +82,9 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                 height: 300,
                 child: PageView.builder(
                   controller: _pageController,
-                  itemCount: _images.length,
+                  itemCount: widget.data.image != null
+                      ? memoryImage.length
+                      : _images.length,
                   onPageChanged: (index) {
                     setState(() {
                       _currentIndex = index;
@@ -72,11 +93,13 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                   itemBuilder: (context, index) {
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset(
-                        _images[index],
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
+                      child: widget.data.image != null
+                          ? Image.memory(memoryImage[index])
+                          : Image.asset(
+                              _images[index],
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
                     );
                   },
                 ),

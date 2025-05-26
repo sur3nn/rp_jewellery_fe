@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rp_jewellery/business_logic/all_products_bloc/all_products_bloc.dart';
@@ -43,7 +45,14 @@ class AddToCart extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)),
                     child: Column(
                       children: [
-                        Image.asset('assets/icons/studs.jpg'),
+                        data.image != null
+                            ? Image.memory(
+                                height: 150,
+                                width: 150,
+                                base64Decode(data.image!
+                                    .replaceAll('\n', '')
+                                    .replaceAll('\r', '')))
+                            : Image.asset('assets/icons/studs.jpg'),
                         const SizedBox(
                           height: 10,
                         ),
