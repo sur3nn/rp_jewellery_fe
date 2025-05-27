@@ -274,10 +274,8 @@ class ColorSelection extends StatefulWidget {
 
 class _ColorSelectionState extends State<ColorSelection> {
   final List<Color> _availableColors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
+    Colors.pink,
+    Colors.brown,
   ];
   int _selectedColorIndex = 0;
 
