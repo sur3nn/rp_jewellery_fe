@@ -4,6 +4,7 @@ import 'package:flutter_upi_india/flutter_upi_india.dart';
 import 'package:rp_jewellery/business_logic/cart_list_bloc/cart_list_bloc.dart';
 import 'package:rp_jewellery/model/cart_list_model.dart';
 import 'package:rp_jewellery/model/cart_model.dart';
+import 'package:rp_jewellery/screens/all_products/payment_status.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({
@@ -72,7 +73,12 @@ class CartScreen extends StatelessWidget {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  _showUpiApps(context);
+                                  _showUpiApps(
+                                      context,
+                                      state.data.data
+                                              ?.map((e) => e.productMaterialId!)
+                                              .toList() ??
+                                          []);
                                 },
                                 child: const Text("Proceed to Checkout"),
                               ),
@@ -92,7 +98,7 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _showUpiApps(BuildContext context) async {
+  Future<void> _showUpiApps(BuildContext context, List<int> ids) async {
     List<ApplicationMeta>? apps = await UpiPay.getInstalledUpiApplications(
         statusType: UpiApplicationDiscoveryAppStatusType.all);
 
@@ -113,7 +119,7 @@ class CartScreen extends StatelessWidget {
             title: Text(app.upiApplication.getAppName()),
             onTap: () {
               Navigator.pop(context); // Close bottom sheet
-              _initiateTransaction(app);
+              _initiateTransaction(app, context, ids);
             },
           );
         }).toList(),
@@ -121,15 +127,20 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _initiateTransaction(ApplicationMeta appMeta) async {
+  Future<void> _initiateTransaction(
+      ApplicationMeta appMeta, BuildContext context, List<int> ids) async {
     final response = await UpiPay.initiateTransaction(
       app: appMeta.upiApplication,
       receiverName: 'Surendar S',
       receiverUpiAddress: 'surendar9080@ybl',
       transactionRef: 'UPITXREF0001',
       transactionNote: 'A UPI Transaction',
-      amount: "100",
+      amount: "1",
     );
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PaymentStatus(status: response, ids: ids)));
   }
 
   Widget _buildSummaryRow(String label, String value, {bool bold = false}) {

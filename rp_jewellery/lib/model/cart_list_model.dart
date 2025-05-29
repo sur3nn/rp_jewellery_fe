@@ -25,6 +25,7 @@ class CartData {
   String? descrption;
   String? totalPrice;
   int? quantity;
+  int? productMaterialId;
 
   CartData({this.descrption, this.totalPrice, this.quantity});
 
@@ -32,6 +33,7 @@ class CartData {
     descrption = json['descrption'];
     totalPrice = json['total_price'];
     quantity = json['quantity'];
+    productMaterialId = json['product_material_id'];
   }
 
   Map<String, dynamic> toJson() {

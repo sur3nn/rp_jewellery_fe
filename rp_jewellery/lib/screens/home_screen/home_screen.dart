@@ -42,18 +42,29 @@ class HomePage extends StatelessWidget {
                           Column(
                             children: [
                               const Text("Gold Rate"),
-                              BlocBuilder<GoldPriceBloc, GoldPriceState>(
-                                builder: (context, state) {
-                                  if (state is GoldPriceSuccess) {
-                                    return Text(
-                                      state.price,
-                                      style:
-                                          const TextStyle(color: Colors.green),
-                                    );
-                                  }
-                                  return const SizedBox();
-                                },
+                              Text(
+                                "₹ 9,340 ",
+                                style: const TextStyle(color: Colors.green),
                               ),
+                              // BlocBuilder<GoldPriceBloc, GoldPriceState>(
+                              //   builder: (context, state) {
+                              //     if (state is GoldPriceSuccess) {
+                              //       return Text(
+                              //         state.price,
+                              //         style:
+                              //             const TextStyle(color: Colors.green),
+                              //       );
+                              //     } else if (state is GoldPriceFailure) {
+                              //       return Text(
+                              //         "9,340 ",
+                              //         style:
+                              //             const TextStyle(color: Colors.green),
+                              //       );
+                              //     }
+
+                              //     return const SizedBox();
+                              //   },
+                              // ),
                               const Text("22KT Per gram",
                                   style: TextStyle(
                                     fontSize: 10,
@@ -81,17 +92,26 @@ class HomePage extends StatelessWidget {
                           Column(
                             children: [
                               Text("Silver Rate"),
-                              BlocBuilder<SilverPriceBloc, SilverPriceState>(
-                                builder: (context, state) {
-                                  if (state is SilverPriceSucess) {
-                                    return Text(
-                                      state.price,
-                                      style: TextStyle(color: Colors.green),
-                                    );
-                                  }
-                                  return SizedBox();
-                                },
+                              Text(
+                                "₹ 112",
+                                style: TextStyle(color: Colors.green),
                               ),
+                              // BlocBuilder<SilverPriceBloc, SilverPriceState>(
+                              //   builder: (context, state) {
+                              //     if (state is SilverPriceSucess) {
+                              //       return Text(
+                              //         state.price,
+                              //         style: TextStyle(color: Colors.green),
+                              //       );
+                              //     } else if (state is SilverPriceFailure) {
+                              //       return Text(
+                              //         "112",
+                              //         style: TextStyle(color: Colors.green),
+                              //       );
+                              //     }
+                              //     return SizedBox();
+                              //   },
+                              // ),
                               Text("Per gram",
                                   style: TextStyle(
                                     fontSize: 10,

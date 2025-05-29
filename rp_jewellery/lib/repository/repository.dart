@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:rp_jewellery/model/all_product_model.dart';
 import 'package:rp_jewellery/model/cart_list_model.dart';
 import 'package:rp_jewellery/model/login_model.dart';
+import 'package:rp_jewellery/model/my_order_model.dart';
 import 'package:rp_jewellery/model/product_category_model.dart';
 import 'package:rp_jewellery/model/scheme_list_model.dart';
 import 'package:rp_jewellery/model/signup_model.dart';
@@ -14,7 +15,7 @@ import 'package:rp_jewellery/services/firebase_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Repository {
-  final Dio dio = Dio(BaseOptions(baseUrl: "http://10.10.13.69:9000/api"));
+  final Dio dio = Dio(BaseOptions(baseUrl: "http://192.168.14.38:9000/api"));
 
   Future<int> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
@@ -177,5 +178,24 @@ class Repository {
       "schemeId": id
     });
     return UserSchemeModel.fromJson(res.data);
+  }
+
+  Future<MyOrderModel> orderList([int? id]) async {
+    final Response res = await dio.get("/user/order-user", queryParameters: {
+      "userId": id ?? await getUserId(),
+    });
+    return MyOrderModel.fromJson(res.data);
+  }
+
+  Future<String> orderPaid(List<int> ids) async {
+    final Response res = await dio.post("/user/order-user",
+        data: {"userId": await getUserId(), "productDetailsMappingId": ids});
+    return res.data["message"];
+  }
+
+  Future<String> statusUpdate(int id, String status) async {
+    final Response res = await dio.patch("/user/order-update",
+        queryParameters: {"orderId": id, "orderStatus": status});
+    return res.data["message"];
   }
 }

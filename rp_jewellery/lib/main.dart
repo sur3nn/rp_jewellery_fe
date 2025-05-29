@@ -1,12 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rp_jewellery/business_logic/admin_order_bloc/admin_order_bloc.dart';
 import 'package:rp_jewellery/business_logic/all_products_bloc/all_products_bloc.dart';
 import 'package:rp_jewellery/business_logic/cart_list_bloc/cart_list_bloc.dart';
 import 'package:rp_jewellery/business_logic/change_pass_bloc/change_pass_bloc.dart';
 import 'package:rp_jewellery/business_logic/forgot_pass_bloc/forgot_pass_bloc.dart';
 import 'package:rp_jewellery/business_logic/gold_price_bloc/gold_price_bloc.dart';
 import 'package:rp_jewellery/business_logic/login_bloc/login_bloc.dart';
+import 'package:rp_jewellery/business_logic/my_orders_bloc/my_orders_bloc.dart';
 import 'package:rp_jewellery/business_logic/pass_otp_verify_bloc/pass_otp_verify_bloc.dart';
 import 'package:rp_jewellery/business_logic/product_category_bloc/product_category_bloc.dart';
 import 'package:rp_jewellery/business_logic/scheme_meta_bloc/scheme_meta_bloc.dart';
@@ -61,6 +63,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<CartListBloc>(create: (context) => CartListBloc(repo)),
         BlocProvider<SchemeMetaBloc>(create: (context) => SchemeMetaBloc(repo)),
         BlocProvider<UserSchemeBloc>(create: (context) => UserSchemeBloc(repo)),
+        BlocProvider<MyOrdersBloc>(create: (context) => MyOrdersBloc(repo)),
+        BlocProvider<AdminOrderBloc>(create: (context) => AdminOrderBloc(repo)),
       ],
       child: MaterialApp(
           title: 'Flutter Demo',
@@ -75,7 +79,9 @@ class MyApp extends StatelessWidget {
           //           isAdmin: false,
           //         );
           //       }
-          home: Login()
+          home: BottomNavigation(
+            isAdmin: false,
+          )
           // return const BottomNavigation(
           //   isAdmin: true,
           // );

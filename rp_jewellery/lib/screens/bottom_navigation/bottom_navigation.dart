@@ -10,6 +10,7 @@ import 'package:rp_jewellery/screens/admin/add_announcement.dart';
 import 'package:rp_jewellery/screens/admin/add_product.dart';
 import 'package:rp_jewellery/screens/admin/add_schemes.dart';
 import 'package:rp_jewellery/screens/all_products/cart.dart';
+import 'package:rp_jewellery/screens/all_products/orders.dart';
 
 import 'package:rp_jewellery/screens/all_products/product_list.dart';
 import 'package:rp_jewellery/screens/home_screen/home_screen.dart';
@@ -86,115 +87,133 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 ),
               ],
             ),
-      drawer: Drawer(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        // backgroundColor: Color.fromRGBO(247, 243, 243, 1),
-        width: MediaQuery.of(context).size.width / 1.5,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 100,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                alignment: Alignment.centerLeft,
-                decoration: const BoxDecoration(
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(15)),
-                    color: Color.fromARGB(100, 232, 9, 9)),
-                width: MediaQuery.of(context).size.width / 1.5,
-                child: Row(
-                  children: [
-                    FutureBuilder<String>(
-                        future: getInitial(),
-                        builder: (context, snap) {
-                          return CircleAvatar(
-                            radius: 20,
-                            backgroundColor: whiteColor,
-                            child: Text(
-                              snap.data ?? " - ",
-                              style: const TextTheme().headlineLarge,
-                            ),
-                          );
-                        }),
-                    const SizedBox(width: 20),
-                    FutureBuilder<String>(
-                        future: getName(),
-                        builder: (context, snap) {
-                          return Text(snap.data ?? " - ",
-                              style:
-                                  TextStyle(color: whiteColor, fontSize: 18));
-                        }),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
+      drawer: widget.isAdmin
+          ? SizedBox()
+          : Drawer(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              // backgroundColor: Color.fromRGBO(247, 243, 243, 1),
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    BlocBuilder<ProductCategoryBloc, ProductCategoryState>(
-                      builder: (context, state) {
-                        if (state is ProductCategorySuccess) {
-                          return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: state.data.data?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                final data = state.data.data?[index];
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  child: ExpansionTile(
-                                      shape: const Border.fromBorderSide(
-                                          BorderSide.none),
-                                      dense: true,
-                                      title: Text(
-                                        data?.materialName ?? "",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w800),
-                                      ),
-                                      children: List.generate(
-                                          data?.productDetails?.length ?? 0,
-                                          (index) => ListTile(
-                                                onTap: () {
-                                                  context
-                                                      .read<AllProductsBloc>()
-                                                      .add(StartGetProducts(
-                                                          id: data!
-                                                              .productDetails![
-                                                                  index]
-                                                              .productMaterialId!));
-                                                  setState(() {
-                                                    _currentIndex = 1;
-                                                  });
-                                                },
-                                                title: Text(data
-                                                        ?.productDetails?[index]
-                                                        .productName ??
-                                                    ""),
-                                              ))),
+                    Container(
+                      height: 100,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      alignment: Alignment.centerLeft,
+                      decoration: const BoxDecoration(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(15)),
+                          color: Color.fromARGB(100, 232, 9, 9)),
+                      width: MediaQuery.of(context).size.width / 1.5,
+                      child: Row(
+                        children: [
+                          FutureBuilder<String>(
+                              future: getInitial(),
+                              builder: (context, snap) {
+                                return CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: whiteColor,
+                                  child: Text(
+                                    snap.data ?? " - ",
+                                    style: const TextTheme().headlineLarge,
+                                  ),
                                 );
-                              });
-                        }
-                        return const SizedBox();
+                              }),
+                          const SizedBox(width: 20),
+                          FutureBuilder<String>(
+                              future: getName(),
+                              builder: (context, snap) {
+                                return Text(snap.data ?? " - ",
+                                    style: TextStyle(
+                                        color: whiteColor, fontSize: 18));
+                              }),
+                        ],
+                      ),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyOrders()));
                       },
-                    )
+                      tileColor: whiteColor,
+                      title: Text("My Orders"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          BlocBuilder<ProductCategoryBloc,
+                              ProductCategoryState>(
+                            builder: (context, state) {
+                              if (state is ProductCategorySuccess) {
+                                return ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: state.data.data?.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      final data = state.data.data?[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10.0),
+                                        child: ExpansionTile(
+                                            shape: const Border.fromBorderSide(
+                                                BorderSide.none),
+                                            dense: true,
+                                            title: Text(
+                                              data?.materialName ?? "",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w800),
+                                            ),
+                                            children: List.generate(
+                                                data?.productDetails?.length ??
+                                                    0,
+                                                (index) => ListTile(
+                                                      onTap: () {
+                                                        context
+                                                            .read<
+                                                                AllProductsBloc>()
+                                                            .add(StartGetProducts(
+                                                                id: data!
+                                                                    .productDetails![
+                                                                        index]
+                                                                    .productMaterialId!));
+                                                        setState(() {
+                                                          _currentIndex = 1;
+                                                        });
+                                                      },
+                                                      title: Text(data
+                                                              ?.productDetails?[
+                                                                  index]
+                                                              .productName ??
+                                                          ""),
+                                                    ))),
+                                      );
+                                    });
+                              }
+                              return const SizedBox();
+                            },
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
       body: IndexedStack(
         index: _currentIndex,
         children: widget.isAdmin
-            ? [
-                const AdminAddAnnouncementScreen(),
-                const AdminAddProductScreen(),
-                const AdminAddGoldSchemeScreen()
+            ? const [
+                // const AdminAddAnnouncementScreen(),
+                AdminOrderTracking(),
+                AdminAddProductScreen(),
+                AdminAddGoldSchemeScreen()
               ]
             : const [
                 HomePage(),
