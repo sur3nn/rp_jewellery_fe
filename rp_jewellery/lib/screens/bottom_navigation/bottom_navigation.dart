@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rp_jewellery/business_logic/all_products_bloc/all_products_bloc.dart';
+import 'package:rp_jewellery/business_logic/filter_cubit/filter_cubit.dart';
 import 'package:rp_jewellery/business_logic/product_category_bloc/product_category_bloc.dart';
 import 'package:rp_jewellery/constants/constants.dart';
 import 'package:rp_jewellery/main.dart';
@@ -16,6 +17,8 @@ import 'package:rp_jewellery/screens/all_products/product_list.dart';
 import 'package:rp_jewellery/screens/home_screen/home_screen.dart';
 import 'package:rp_jewellery/screens/schemes/schemes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+enum SortOption { highToLow, lowToHigh, defaultPrice }
 
 class BottomNavigation extends StatefulWidget {
   final bool isAdmin;
@@ -72,6 +75,18 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 ),
               ),
               actions: [
+                (!widget.isAdmin && _currentIndex == 1)
+                    ? IconButton(
+                        onPressed: () {
+                          _scaffoldKey.currentState?.openEndDrawer();
+                        },
+                        icon: Icon(
+                          Icons.filter_list,
+                          size: 24,
+                          color: Theme.of(context).textTheme.bodyLarge!.color!,
+                        ),
+                      )
+                    : SizedBox(),
                 IconButton(
                   onPressed: () {
                     Navigator.push(context,
@@ -87,6 +102,51 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 ),
               ],
             ),
+      endDrawer: (!widget.isAdmin && _currentIndex == 1)
+          ? Drawer(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              // backgroundColor: Color.fromRGBO(247, 243, 243, 1),
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: BlocBuilder<FilterCubit, SortOption>(
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      Text("Filters"),
+                      SizedBox(height: 10),
+                      RadioListTile<SortOption>(
+                        title: const Text("High to Low"),
+                        value: SortOption.highToLow,
+                        groupValue: state,
+                        onChanged: (value) {
+                          context.read<FilterCubit>().setData(value!);
+                          context
+                              .read<AllProductsBloc>()
+                              .add(StartGetProducts(id: 0, filter: "high"));
+                          Navigator.pop(context);
+                        },
+                      ),
+                      RadioListTile<SortOption>(
+                        title: const Text("Low to High"),
+                        value: SortOption.lowToHigh,
+                        groupValue: state,
+                        onChanged: (value) {
+                          context.read<FilterCubit>().setData(value!);
+                          context
+                              .read<AllProductsBloc>()
+                              .add(StartGetProducts(id: 0, filter: "low"));
+
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
+            )
+          : SizedBox(),
       drawer: widget.isAdmin
           ? SizedBox()
           : Drawer(

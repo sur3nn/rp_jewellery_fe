@@ -15,7 +15,7 @@ import 'package:rp_jewellery/services/firebase_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Repository {
-  final Dio dio = Dio(BaseOptions(baseUrl: "http://192.168.14.38:9000/api"));
+  final Dio dio = Dio(BaseOptions(baseUrl: "http://10.10.13.30:9000/api"));
 
   Future<int> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
@@ -135,9 +135,9 @@ class Repository {
     return res.data["message"];
   }
 
-  Future<ProductDetailsModel> getAllProducts(int id) async {
-    final Response res = await dio
-        .get("/home/product-details", queryParameters: {"productId": id});
+  Future<ProductDetailsModel> getAllProducts(int id, String? filter) async {
+    final Response res = await dio.get("/home/product-details",
+        queryParameters: {"productId": id, "isPrice": filter ?? ""});
     return ProductDetailsModel.fromJson(res.data);
   }
 

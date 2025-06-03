@@ -5,6 +5,9 @@ sealed class AllProductsEvent {}
 
 class StartGetProducts extends AllProductsEvent {
   final int id;
-
-  StartGetProducts({required this.id});
+  final String? filter;
+  StartGetProducts({
+    required this.id,
+    this.filter,
+  });
 }

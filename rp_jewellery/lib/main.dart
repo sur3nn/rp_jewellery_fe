@@ -5,6 +5,7 @@ import 'package:rp_jewellery/business_logic/admin_order_bloc/admin_order_bloc.da
 import 'package:rp_jewellery/business_logic/all_products_bloc/all_products_bloc.dart';
 import 'package:rp_jewellery/business_logic/cart_list_bloc/cart_list_bloc.dart';
 import 'package:rp_jewellery/business_logic/change_pass_bloc/change_pass_bloc.dart';
+import 'package:rp_jewellery/business_logic/filter_cubit/filter_cubit.dart';
 import 'package:rp_jewellery/business_logic/forgot_pass_bloc/forgot_pass_bloc.dart';
 import 'package:rp_jewellery/business_logic/gold_price_bloc/gold_price_bloc.dart';
 import 'package:rp_jewellery/business_logic/login_bloc/login_bloc.dart';
@@ -29,6 +30,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseConfig().initNotification();
+  print("  tokennn ${await FirebaseConfig().getToken()}");
   runApp(const MyApp());
 }
 
@@ -65,6 +67,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<UserSchemeBloc>(create: (context) => UserSchemeBloc(repo)),
         BlocProvider<MyOrdersBloc>(create: (context) => MyOrdersBloc(repo)),
         BlocProvider<AdminOrderBloc>(create: (context) => AdminOrderBloc(repo)),
+        BlocProvider<FilterCubit>(create: (context) => FilterCubit()),
       ],
       child: MaterialApp(
           title: 'Flutter Demo',

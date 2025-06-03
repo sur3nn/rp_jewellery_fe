@@ -12,7 +12,7 @@ class AllProductsBloc extends Bloc<AllProductsEvent, AllProductsState> {
     on<StartGetProducts>((event, emit) async {
       try {
         emit(AllProductsLoading());
-        final data = await repo.getAllProducts(event.id);
+        final data = await repo.getAllProducts(event.id, event.filter);
         emit(AllProductsSuccess(data: data));
       } catch (e) {}
     });
