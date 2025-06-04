@@ -14,6 +14,7 @@ import 'package:rp_jewellery/screens/all_products/cart.dart';
 import 'package:rp_jewellery/screens/all_products/orders.dart';
 
 import 'package:rp_jewellery/screens/all_products/product_list.dart';
+import 'package:rp_jewellery/screens/auth/login.dart';
 import 'package:rp_jewellery/screens/home_screen/home_screen.dart';
 import 'package:rp_jewellery/screens/schemes/schemes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -153,117 +154,171 @@ class _BottomNavigationState extends State<BottomNavigation> {
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               // backgroundColor: Color.fromRGBO(247, 243, 243, 1),
               width: MediaQuery.of(context).size.width / 1.5,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 100,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      alignment: Alignment.centerLeft,
-                      decoration: const BoxDecoration(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(15)),
-                          color: Color.fromARGB(100, 232, 9, 9)),
-                      width: MediaQuery.of(context).size.width / 1.5,
-                      child: Row(
-                        children: [
-                          FutureBuilder<String>(
-                              future: getInitial(),
-                              builder: (context, snap) {
-                                return CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: whiteColor,
-                                  child: Text(
-                                    snap.data ?? " - ",
-                                    style: const TextTheme().headlineLarge,
-                                  ),
-                                );
-                              }),
-                          const SizedBox(width: 20),
-                          FutureBuilder<String>(
-                              future: getName(),
-                              builder: (context, snap) {
-                                return Text(snap.data ?? " - ",
-                                    style: TextStyle(
-                                        color: whiteColor, fontSize: 18));
-                              }),
-                        ],
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MyOrders()));
-                      },
-                      tileColor: whiteColor,
-                      title: Text("My Orders"),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const SizedBox(
-                            height: 40,
-                          ),
-                          BlocBuilder<ProductCategoryBloc,
-                              ProductCategoryState>(
-                            builder: (context, state) {
-                              if (state is ProductCategorySuccess) {
-                                return ListView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: state.data.data?.length ?? 0,
-                                    itemBuilder: (context, index) {
-                                      final data = state.data.data?[index];
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 10.0),
-                                        child: ExpansionTile(
-                                            shape: const Border.fromBorderSide(
-                                                BorderSide.none),
-                                            dense: true,
-                                            title: Text(
-                                              data?.materialName ?? "",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.w800),
+                          Column(
+                            children: [
+                              Container(
+                                height: 100,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                alignment: Alignment.centerLeft,
+                                decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(15)),
+                                    color: Color.fromARGB(100, 232, 9, 9)),
+                                width: MediaQuery.of(context).size.width / 1.5,
+                                child: Row(
+                                  children: [
+                                    FutureBuilder<String>(
+                                        future: getInitial(),
+                                        builder: (context, snap) {
+                                          return CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor: whiteColor,
+                                            child: Text(
+                                              snap.data ?? " - ",
+                                              style: const TextTheme()
+                                                  .headlineLarge,
                                             ),
-                                            children: List.generate(
-                                                data?.productDetails?.length ??
-                                                    0,
-                                                (index) => ListTile(
-                                                      onTap: () {
-                                                        context
-                                                            .read<
-                                                                AllProductsBloc>()
-                                                            .add(StartGetProducts(
-                                                                id: data!
-                                                                    .productDetails![
-                                                                        index]
-                                                                    .productMaterialId!));
-                                                        setState(() {
-                                                          _currentIndex = 1;
-                                                        });
-                                                      },
-                                                      title: Text(data
-                                                              ?.productDetails?[
-                                                                  index]
-                                                              .productName ??
-                                                          ""),
-                                                    ))),
-                                      );
-                                    });
-                              }
-                              return const SizedBox();
-                            },
-                          )
+                                          );
+                                        }),
+                                    const SizedBox(width: 20),
+                                    FutureBuilder<String>(
+                                        future: getName(),
+                                        builder: (context, snap) {
+                                          return Text(snap.data ?? " - ",
+                                              style: TextStyle(
+                                                  color: whiteColor,
+                                                  fontSize: 18));
+                                        }),
+                                  ],
+                                ),
+                              ),
+                              ListTile(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MyOrders()));
+                                },
+                                tileColor: whiteColor,
+                                title: Text("My Orders"),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 40,
+                                    ),
+                                    BlocBuilder<ProductCategoryBloc,
+                                        ProductCategoryState>(
+                                      builder: (context, state) {
+                                        if (state is ProductCategorySuccess) {
+                                          return ListView.builder(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              itemCount:
+                                                  state.data.data?.length ?? 0,
+                                              itemBuilder: (context, index) {
+                                                final data =
+                                                    state.data.data?[index];
+                                                return Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 10.0),
+                                                  child: ExpansionTile(
+                                                      shape: const Border
+                                                          .fromBorderSide(
+                                                          BorderSide.none),
+                                                      dense: true,
+                                                      title: Text(
+                                                        data?.materialName ??
+                                                            "",
+                                                        style: const TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w800),
+                                                      ),
+                                                      children: List.generate(
+                                                          data?.productDetails
+                                                                  ?.length ??
+                                                              0,
+                                                          (index) => ListTile(
+                                                                onTap: () {
+                                                                  context
+                                                                      .read<
+                                                                          AllProductsBloc>()
+                                                                      .add(StartGetProducts(
+                                                                          id: data!
+                                                                              .productDetails![index]
+                                                                              .productMaterialId!));
+                                                                  setState(() {
+                                                                    _currentIndex =
+                                                                        1;
+                                                                  });
+                                                                },
+                                                                title: Text(data
+                                                                        ?.productDetails?[
+                                                                            index]
+                                                                        .productName ??
+                                                                    ""),
+                                                              ))),
+                                                );
+                                              });
+                                        }
+                                        return const SizedBox();
+                                      },
+                                    )
+                                  ],
+                                ),
+                              ),
+                              ListTile(
+                                trailing: Icon(Icons.logout),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Login()));
+                                },
+                                tileColor: whiteColor,
+                                title: Text("Logout"),
+                              ),
+                            ],
+                          ),
+                          // SizedBox(height: 40),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Contact Us"),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text("Email : rpjewellery1992@gmail.com"),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text("Mobile : 6381776235"),
+                        ),
+                        Text(
+                            "Location : Pannadi Complex,Oddanchatram, Dindigul"),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
       body: IndexedStack(
